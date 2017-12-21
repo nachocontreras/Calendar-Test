@@ -79,15 +79,3 @@ def get_service(credentials=CREDENTIALS):
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
     return service
-
-def get_events_list(calendar_id):
-    page_token = None
-    service = get_service()
-    while True:
-      events = service.events().list(calendarId=calendar_id, pageToken=page_token).execute()
-      for event in events['items']:
-        print event['summary']
-      page_token = events.get('nextPageToken')
-      if not page_token:
-        break
-    
