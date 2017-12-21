@@ -11,7 +11,13 @@ def get_events_list(calendar_id, minDate, maxDate):
     while True:
         events = service.events().list(calendarId=calendar_id, pageToken=page_token, timeMax=maxDate, timeMin=minDate).execute()
         for event in events['items']:
-            results[event["summary"]] = (event["start"]["datetime"] , event["end"]["datetime"]) 
+            try:
+                in = event["start"]["datetime"]
+                fin = event["end"]["datetime"]
+            except KeyError:
+                in = event["start"]["date"]
+                fin = event["end"]["date"]
+            results[event["summary"]] = (in, fin) 
         page_token = events.get('nextPageToken')
         if not page_token:
           break
@@ -30,8 +36,8 @@ def manage_list_events():
                 for user in user_key:
                     if user in name:
                         final[user_key[user]] += categories[cat]
+                        print(final[user_key[user]])
                         break
                 break
-        print(final)
     return final
         
