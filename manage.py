@@ -1,8 +1,10 @@
 from init_variables import get_service
 from config import user_key, categories
 from collections import defaultdict
+import datetime
+# import calendar
 
-def get_events_list(calendar_id):
+def get_events_list(calendar_id, minDate, maxDate):
     results = {}
     page_token = None
     service = get_service()
@@ -18,7 +20,9 @@ def get_events_list(calendar_id):
 def manage_list_events():
     final = defaultdict(int)
     calendar_id = input("Ingrese mail de calendario")
-    events = get_events_list(calendar_id)
+    minDate = datetime.strptime(input("Ingrese fecha inicio (Jan 12 2017): "))
+    maxDate = datetime.strptime(input("Ingrese fecha termino (Jan 12 2017): "))
+    events = get_events_list(calendar_id, mindate, maxDate)
     for name, dates in events.items():
         print(name, date)
         for cat in categories:
