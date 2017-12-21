@@ -9,7 +9,7 @@ def get_events_list(calendar_id, minDate, maxDate):
     page_token = None
     service = get_service()
     while True:
-        events = service.events().list(calendarId=calendar_id, pageToken=page_token).execute()
+        events = service.events().list(calendarId=calendar_id, pageToken=page_token, timeMax=maxDate, timeMin=minDate).execute()
         for event in events['items']:
             results[event["summary"]] = (event["start"]["datetime"] , event["end"]["datetime"]) 
         page_token = events.get('nextPageToken')
