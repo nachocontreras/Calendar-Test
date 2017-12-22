@@ -79,3 +79,7 @@ def get_service(credentials=CREDENTIALS):
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
     return service
+
+if __name__ == "__main__":
+    service = get_service()
+    print(service)
