@@ -1,7 +1,7 @@
 from init_variables import get_service
 from config import user_key, categories
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 import pprint
 # import calendar
 
@@ -17,11 +17,11 @@ def get_events_list(calendar_id, minDate="", maxDate=""):
         # print(events)
         for event in events['items']:
             try:
-                ini = event["start"]["dateTime"]
-                fin = event["end"]["dateTime"]
+                ini = datetime.strptime(event["start"]["dateTime"][:-6], "%Y-%m-%dT%H:%M:%S")
+                fin = datetime.strptime(event["end"]["dateTime"][:-6], "%Y-%m-%dT%H:%M:%S")
             except KeyError:
-                ini = event["start"]["date"]
-                fin = event["end"]["date"]
+                ini = datetime.strptime(event["start"]["date"], "%Y-%m-%d")
+                fin = datetime.strptime(event["end"]["date"], "%Y-%m-%d")
             results[event["summary"]] = (ini, fin)
         page_token = events.get('nextPageToken')
         if not page_token:
@@ -38,7 +38,9 @@ def manage_list_events():
     maxDate = ""
     events = get_events_list(calendar_id, minDate, maxDate)
     for name, dates in events.items():
-        print(name, dates)
+        duration = dates[1] - dates[0]
+        duration = duration.seconds / 3600 + duration.days
+        print(name, ": {} horas".format(duration))
         for cat in categories:
             if cat in name:
                 for user in user_key.values():
